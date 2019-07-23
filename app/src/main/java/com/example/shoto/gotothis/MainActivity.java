@@ -88,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            int maxHeight = 2000;
-            int maxWidth = 2000;
-            float scale = Math.min(((float) maxHeight / bitmap.getWidth()), ((float) maxWidth / bitmap.getHeight()));
-
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale, scale);
-
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//            int maxHeight = 2000;
+//            int maxWidth = 2000;
+//            float scale = Math.min(((float) maxHeight / bitmap.getWidth()), ((float) maxWidth / bitmap.getHeight()));
+//
+//            Matrix matrix = new Matrix();
+//            matrix.postScale(scale, scale);
+//
+//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             btnClick.setText("Take another");
             ivPicture.setImageBitmap(bitmap);
 
@@ -117,106 +117,14 @@ public class MainActivity extends AppCompatActivity {
 
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
         SparseArray<TextBlock> text = textRecognizer.detect(frame);
+        String content="";
 
         for (int i = 0; i < text.size(); ++i) {
             TextBlock item = text.valueAt(i);
             if (item != null && item.getValue() != null) {
-                tvItem.setText(item.getValue());
+                content += item.getValue();
             }
         }
+        tvItem.setText(content);
     }
 }
-
-
-//    private void createCameraSource() {
-//
-//        // Create the TextRecognizer
-//        final TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-//        // TODO: Set the TextRecognizer's Processor.
-//
-//        // Check if the TextRecognizer is operational.
-//        if (!textRecognizer.isOperational()) {
-//            System.out.println("Detector dependencies are not yet available.");
-//
-//            // Check for low storage.  If there is low storage, the native library will not be
-//            // downloaded, so detection will not become operational.
-//            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-//            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
-//
-//            if (hasLowStorage) {
-//                Toast.makeText(this, "Low storage", Toast.LENGTH_LONG).show();
-//                System.out.println("Low storage");
-//            }
-//        }
-//
-//        // Create the cameraSource using the TextRecognizer.
-//        cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
-//                .setFacing(CameraSource.CAMERA_FACING_BACK)
-//                .setRequestedPreviewSize(1280, 1024)
-//                .setAutoFocusEnabled(true)
-//                .setRequestedFps(2.0f)
-//                .build();
-//
-//        mCameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
-//            @Override
-//            public void surfaceCreated(SurfaceHolder holder) {
-//                try {
-//
-//                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-//                            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//
-//                        ActivityCompat.requestPermissions(MainActivity.this,
-//                                new String[]{Manifest.permission.CAMERA},
-//                                CAMERA_REQUEST);
-//                        return;
-//                    }
-//                    cameraSource.start(mCameraView.getHolder());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//            }
-//
-//            /**
-//             * Release resources for cameraSource
-//             */
-//            @Override
-//            public void surfaceDestroyed(SurfaceHolder holder) {
-//                cameraSource.stop();
-//            }
-//        });
-//
-//        textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
-//            @Override
-//            public void release() {
-//            }
-//
-//            /**
-//             * Detect all the text from camera using TextBlock and the values into a stringBuilder
-//             * which will then be set to the textView.
-//             * */
-//            @Override
-//            public void receiveDetections(Detector.Detections<TextBlock> detections) {
-//                final SparseArray<TextBlock> items = detections.getDetectedItems();
-//                if (items.size() != 0) {
-//
-//                    tvItem.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            StringBuilder stringBuilder = new StringBuilder();
-//                            for (int i = 0; i < items.size(); i++) {
-//                                TextBlock item = items.valueAt(i);
-//                                stringBuilder.append(item.getValue());
-//                                stringBuilder.append("\n");
-//                            }
-//                            tvItem.setText(stringBuilder.toString());
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//    }
-//}
