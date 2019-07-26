@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -34,6 +35,12 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+//TODO: Recognize more date formats, clean code, and remove date from title
 
 public class MainActivity extends AppCompatActivity {
 
@@ -126,5 +133,32 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         tvItem.setText(content);
+
+        Pattern p = Pattern.compile("[0-9]+-[0-9]+-[0-9]{4}");
+        Matcher m = p.matcher(content);
+
+        if(m.find()){
+            String d = m.group(0);
+            long startTime = 0;
+            System.out.println(d);
+            String startDate = "2011-09-01";
+            try {
+                Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d);
+                startTime=date.getTime();
+                System.out.println(startTime);
+            }
+            catch(Exception e){ }
+
+            Intent calIntent = new Intent(Intent.ACTION_INSERT);
+            calIntent.setType("vnd.android.cursor.item/event");
+            calIntent.putExtra(CalendarContract.Events.ALL_DAY,true);
+            calIntent.putExtra(CalendarContract.Events.DESCRIPTION, content);
+            calIntent.putExtra(CalendarContract.Events.TITLE, content);
+            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+            startActivity(calIntent);
+        }
+        else {
+            System.out.println("no");
+        }
     }
 }
