@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         }
         tvItem.setText(content);
 
-        Pattern p = Pattern.compile("[0-9]+-[0-9]+-[0-9]{4}");
+        Pattern p = Pattern.compile("[0-9]+[-/][0-9]+[-/][0-9]{4}");
         Matcher m = p.matcher(content);
 
         if(m.find()){
