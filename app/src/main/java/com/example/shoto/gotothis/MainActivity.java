@@ -2,39 +2,27 @@ package com.example.shoto.gotothis;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.util.Log;
 import android.util.SparseArray;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -59,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvItem = (TextView) findViewById(R.id.tvItem);
-        //   mCameraView = (SurfaceView) findViewById(R.id.surfaceView);
-
-        // createCameraSource();
 
         btnClick = (Button) findViewById(R.id.btnClick);
         ivPicture = (ImageView) findViewById(R.id.ivPicture);
@@ -95,14 +80,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            int maxHeight = 2000;
-//            int maxWidth = 2000;
-//            float scale = Math.min(((float) maxHeight / bitmap.getWidth()), ((float) maxWidth / bitmap.getHeight()));
-//
-//            Matrix matrix = new Matrix();
-//            matrix.postScale(scale, scale);
-//
-//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
             btnClick.setText("Take another");
             ivPicture.setImageBitmap(bitmap);
 
@@ -111,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void detectText(Bitmap bitmap) {
-        //Bitmap textBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(this).build();
 
@@ -140,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
         if(m.find()){
             String d = m.group(0);
             long startTime = 0;
-            System.out.println(d);
-            String startDate = "2011-09-01";
+
             try {
                 Date date = new SimpleDateFormat("dd-MM-yyyy").parse(d);
                 startTime=date.getTime();
@@ -158,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(calIntent);
         }
         else {
-            System.out.println("no");
+            System.out.println("Date regex not matched");
         }
     }
 }
