@@ -35,11 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnClick;
     private ImageView ivPicture;
     private TextView tvItem;
-    // SurfaceView mCameraView;
-    // CameraSource cameraSource;
 
     private static final int CAMERA_REQUEST = 101;
-    private static final int MY_CAMERA_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
